@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProQOL-20 Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background: white;
+            padding: 2rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .instruction-box {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #222;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .option-label:hover {
+            background: #f5f5f5;
+        }
+
+        .option-label input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #1976d2;
+        }
+
+        .option-label span {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #1976d2;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #1565c0;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #eeeeee;
+        }
+
+        #assessmentForm {
+            display: block;
+        }
+
+        #scoreScreen {
+            display: none;
+        }
+
+        .score-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .score-value {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .score-level {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .results-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .results-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .interpretation {
+            margin-bottom: 1.5rem;
+        }
+
+        .interpretation-box {
+            border-left: 4px solid;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .interpretation-box.info {
+            background: #e3f2fd;
+            border-color: #1976d2;
+        }
+
+        .interpretation-box.warning {
+            background: #fff3e0;
+            border-color: #f57c00;
+        }
+
+        .interpretation-box.danger {
+            background: #ffebee;
+            border-color: #d32f2f;
+        }
+
+        .interpretation-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .interpretation-box.info .interpretation-title {
+            color: #1565c0;
+        }
+
+        .interpretation-box.warning .interpretation-title {
+            color: #e65100;
+        }
+
+        .interpretation-box.danger .interpretation-title {
+            color: #b71c1c;
+        }
+
+        .interpretation-text {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .interpretation-steps {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .interpretation-box.info .interpretation-steps {
+            color: #1565c0;
+        }
+
+        .interpretation-box.warning .interpretation-steps {
+            color: #e65100;
+        }
+
+        .interpretation-box.danger .interpretation-steps {
+            color: #b71c1c;
+        }
+
+        .interpretation-list {
+            list-style: none;
+            padding-left: 0;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .interpretation-list li {
+            margin: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .interpretation-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        .generic-message {
+            font-size: 13px;
+            color: #666;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .divider {
+            border-top: 1px solid #e0e0e0;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .score-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+
+        .progress-indicator {
+            background: #f5f5f5;
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: #1976d2;
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Assessment Form -->
+        <form id="assessmentForm">
+            <header>
+                <h1>ProQOL-20 Assessment</h1>
+                <p class="subtitle">Professional Quality of Life: Compassion Satisfaction, Burnout & Secondary Traumatic Stress</p>
+            </header>
+
+            <div class="instruction-box">
+                <strong>Instructions:</strong> Think about your work as a clinician over the last 30 days. For each statement below, select the number that best describes how frequently you have had this experience.
+            </div>
+
+            <div class="progress-indicator">
+                <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Calculate My Scores</button>
+            </div>
+        </form>
+
+        <!-- Results Screen -->
+        <div id="scoreScreen">
+            <header>
+                <h1>Your ProQOL-20 Results</h1>
+                <p class="subtitle">Confidential assessment results for your reflection</p>
+            </header>
+
+            <div class="results-container">
+                <div class="score-cards">
+                    <div class="score-card">
+                        <div class="score-label">Compassion Satisfaction</div>
+                        <div class="score-value" id="csScore">—</div>
+                        <div class="score-level" id="csLevel">max 35</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-label">Burnout</div>
+                        <div class="score-value" id="boScore">—</div>
+                        <div class="score-level" id="boLevel">max 35</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-label">Secondary Traumatic Stress</div>
+                        <div class="score-value" id="stsScore">—</div>
+                        <div class="score-level" id="stsLevel">max 30</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div id="interpretation"></div>
+
+                <div class="divider"></div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Start Over</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { id: 1, text: "I get satisfaction from being able to help people.", subscale: "CS" },
+            { id: 2, text: "I am happy with my life as a clinician.", subscale: "BO", reverse: true },
+            { id: 3, text: "I am preoccupied with more than one person I help.", subscale: "STS" },
+            { id: 4, text: "I feel invigorated after working with those I help.", subscale: "CS" },
+            { id: 5, text: "I feel connected to others around me.", subscale: "BO", reverse: true },
+            { id: 6, text: "I find it difficult to separate my personal life from my life as a helper.", subscale: "STS" },
+            { id: 7, text: "I like my work as a helper.", subscale: "CS" },
+            { id: 8, text: "I think that I might have been affected by the traumatic stress of those I help.", subscale: "STS" },
+            { id: 9, text: "I feel trapped by my job as a helper.", subscale: "BO" },
+            { id: 10, text: "Because of my helping, I have felt \"on edge\" about various things.", subscale: "STS" },
+            { id: 11, text: "My work makes me feel satisfied.", subscale: "CS" },
+            { id: 12, text: "I am the person I always wanted to be.", subscale: "BO", reverse: true },
+            { id: 13, text: "I feel depressed because of the traumatic experiences of the people I help.", subscale: "STS" },
+            { id: 14, text: "I feel worn out because of my work as a helper.", subscale: "BO" },
+            { id: 15, text: "I believe I can make a difference through my work.", subscale: "CS" },
+            { id: 16, text: "I feel overwhelmed because my case load seems endless.", subscale: "BO" },
+            { id: 17, text: "I am proud of what I can do to help.", subscale: "CS" },
+            { id: 18, text: "As a result of my helping, I have intrusive, frightening thoughts.", subscale: "STS" },
+            { id: 19, text: "I feel \"bogged down\" by the system.", subscale: "BO" },
+            { id: 20, text: "I am happy that I chose to do this work.", subscale: "CS" }
+        ];
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-card';
+
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.textContent = `${q.id}. ${q.text}`;
+                questionDiv.appendChild(questionText);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                for (let i = 1; i <= 5; i++) {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'option-label';
+
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `q${q.id}`;
+                    input.value = i;
+                    input.required = true;
+                    input.addEventListener('change', updateProgress);
+
+                    const span = document.createElement('span');
+                    span.textContent = i;
+
+                    optionLabel.appendChild(input);
+                    optionLabel.appendChild(span);
+                    optionsGrid.appendChild(optionLabel);
+                }
+
+                questionDiv.appendChild(optionsGrid);
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function updateProgress() {
+            const formData = new FormData(document.getElementById('assessmentForm'));
+            const answered = formData.entries().length;
+            const total = questions.length;
+            const progress = (answered / total) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function calculateScores() {
+            const formData = new FormData(document.getElementById('assessmentForm'));
+            const responses = {};
+
+            for (let [key, value] of formData.entries()) {
+                responses[key] = parseInt(value);
+            }
+
+            let CS = 0, BO = 0, STS = 0;
+
+            questions.forEach(q => {
+                let score = responses[`q${q.id}`];
+
+                if (q.reverse) {
+                    score = score === 1 ? 5 : score === 2 ? 4 : score === 3 ? 3 : score === 4 ? 2 : 1;
+                }
+
+                if (q.subscale === 'CS') CS += score;
+                else if (q.subscale === 'BO') BO += score;
+                else if (q.subscale === 'STS') STS += score;
+            });
+
+            return { CS, BO, STS };
+        }
+
+        function getLevel(score, max) {
+            if (max === 35) {
+                if (score >= 27) return 'High';
+                if (score >= 17) return 'Moderate';
+                return 'Low';
+            } else if (max === 30) {
+                if (score >= 22) return 'High';
+                if (score >= 14) return 'Moderate';
+                return 'Low';
+            }
+        }
+
+        function getInterpretation(CS, BO, STS) {
+            let html = '';
+
+            if (CS >= 27) {
+                html += `<div class="interpretation-box info">
+                    <div class="interpretation-title">High Compassion Satisfaction</div>
+                    <div class="interpretation-text">You are experiencing significant positive meaning from your work. This is a protective factor.</div>
+                    <div class="interpretation-steps">Next steps:</div>
+                    <ul class="interpretation-list">
+                        <li>Identify what sustains your satisfaction—specific patients, colleagues, outcomes, or aspects of your role—and protect that space</li>
+                        <li>Share your approach with peers who may be struggling; your perspective has protective value for the team</li>
+                        <li>Document what works for you (daily rituals, boundaries, sources of meaning) so you can return to it during difficult periods</li>
+                    </ul>
+                </div>`;
+            }
+
+            if (BO >= 17) {
+                html += `<div class="interpretation-box warning">
+                    <div class="interpretation-title">Moderate or High Burnout</div>
+                    <div class="interpretation-text">You may be experiencing difficulty coping with the demands of your role. This reflects systemic pressure—not personal failure.</div>
+                    <div class="interpretation-steps">Next steps:</div>
+                    <ul class="interpretation-list">
+                        <li>Implement one micro-recovery practice today: a 5-minute walk, 3 conscious breaths, or brief transition between patients</li>
+                        <li>Audit one time boundary—when you stop answering messages, when you step away from your desk—and protect it for one week</li>
+                        <li>Identify one colleague or mentor and schedule a brief check-in (15 mins) to talk about workload; normalizing this conversation reduces isolation</li>
+                        <li>Consider speaking with your department lead about workload: systemic problems have systemic solutions, and your voice matters in that discussion</li>
+                    </ul>
+                </div>`;
+            }
+
+            if (STS >= 14) {
+                html += `<div class="interpretation-box danger">
+                    <div class="interpretation-title">Moderate or High Secondary Traumatic Stress</div>
+                    <div class="interpretation-text">You may be absorbing traumatic experiences of those you help—intrusive thoughts, emotional numbing, or hypervigilance are common.</div>
+                    <div class="interpretation-steps">Next steps:</div>
+                    <ul class="interpretation-list">
+                        <li>Seek peer supervision or clinical debrief: talking about difficult cases with trusted colleagues reduces the weight you carry alone</li>
+                        <li>Create a concrete boundary between work and home: change clothes, take a different route, or use a brief ritual to transition and release the day</li>
+                        <li>Speak with your organisation's occupational health or employee assistance programme; professional support for secondary trauma is not weakness—it is professional maintenance</li>
+                        <li>If intrusive thoughts persist, consider brief trauma-focused therapy (EMDR or CBT); these are evidence-based and accessible in many healthcare settings</li>
+                    </ul>
+                </div>`;
+            }
+
+            if (!html) {
+                html = '<div class="generic-message">Your scores suggest you are managing well across all dimensions. Continue what you are doing and stay aware of changes in these patterns over time.</div>';
+            }
+
+            return html;
+        }
+
+        function resetForm() {
+            document.getElementById('assessmentForm').reset();
+            document.getElementById('assessmentForm').style.display = 'block';
+            document.getElementById('scoreScreen').style.display = 'none';
+            document.getElementById('progressBar').style.width = '0%';
+            window.scrollTo(0, 0);
+        }
+
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const { CS, BO, STS } = calculateScores();
+
+            document.getElementById('csScore').textContent = CS;
+            document.getElementById('boScore').textContent = BO;
+            document.getElementById('stsScore').textContent = STS;
+
+            document.getElementById('csLevel').textContent = getLevel(CS, 35);
+            document.getElementById('boLevel').textContent = getLevel(BO, 35);
+            document.getElementById('stsLevel').textContent = getLevel(STS, 30);
+
+            document.getElementById('interpretation').innerHTML = getInterpretation(CS, BO, STS);
+
+            document.getElementById('assessmentForm').style.display = 'none';
+            document.getElementById('scoreScreen').style.display = 'block';
+            window.scrollTo(0, 0);
+        });
+
+        renderQuestions();
+    </script>
+</body>
+</html>
